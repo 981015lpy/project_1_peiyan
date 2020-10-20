@@ -3,7 +3,8 @@ import './App.scss'
 
 export default class App extends React.Component {
   state = {
-    
+    clickNum: 0,
+
   }
 
   componentDidMount() {
@@ -101,22 +102,46 @@ export default class App extends React.Component {
 
   goAhead = () => {
     const personObj = document.getElementById("person")
-    var xy = this.getXY(personObj)
 
-    var flag = true;
-    var left = xy.x;
+    this.setState({ clickNum: this.state.clickNum + 1 }, () => {
+      if (this.state.clickNum === 1) {
+        let destination1 = { x: 80, y: 729 }
+        this.climbingAnimation(personObj, destination1, 1)
+      }
+      else if (this.state.clickNum === 2) {
+        let destination1 = { x: 280, y: 529 }
+        this.climbingAnimation(personObj, destination1, 0.5)
+      }
+    })
+  }
+
+  /**
+   * @name: walking/climbing animation
+   * @param {ReactDOM} obj
+   * @param {object} destination: {x: 100, y: 100}
+   * @param {Number} step
+   */
+  climbingAnimation = (obj, destination, step) => {
+    let xy = this.getXY(obj)
+    
+
+    let left = xy.x
+    let bottom = xy.y
 
     function renderPerson() {
-      if (flag) {
-        if (left - xy.x >= 10) flag = false
-        personObj.style.left = ` ${left++}px`
-      }
+      if (left !== destination.x) obj.style.left = `${left += step}px`
+      if (bottom !== destination.y) obj.style.top = `${bottom -= step}px` 
     }
 
-    // requestAnimationFrame效果
     (function animloop() {
-        renderPerson();
-        window.requestAnimationFrame(animloop);
+      renderPerson();
+      let animateId = window.requestAnimationFrame(animloop);
+
+      // stop animation
+      if (left === destination.x && bottom === destination.y) {
+        cancelAnimationFrame(animateId)
+      }
+      
     })();
   }
 
@@ -146,7 +171,7 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <div className="operationBar">
-          <button onClick={() => this.goAhead()}>KEEP MOVING</button>
+          <button onClick={() => this.goAhead()}>CLIMBING</button>
         </div>
         <canvas id="person" width="50" height="60"/>
         <canvas id="mountain" width="1440" height="762"/>
