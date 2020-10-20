@@ -11,6 +11,7 @@ export default class App extends React.Component {
     this.createMountain()
   }
 
+  // create the mountain figure
   createMountain = () => {
     const point1 = { x: 100, y: document.getElementById('mountain').height }
     const point2 = { x: point1.x + 200, y: point1.y - 200 }
@@ -30,6 +31,7 @@ export default class App extends React.Component {
     this.createLine('mountain', point7, point8)
   }
 
+  // create the person figure
   createPerson = () => {
     const headRadius = 10
     const headX = headRadius + 10
@@ -64,6 +66,13 @@ export default class App extends React.Component {
     this.createLine('person', rightLegStartPoint2, rightLegStopPoint2)
   }
 
+  /**
+   * @name: create circle line
+   * @param {ReactDOM} domID
+   * @param {Number} x : circle center point positionX 
+   * @param {Number} y: circle center point positionY
+   * @param {Number} r: circle radius
+   */
   createCircle = (domID, x, y, r) => {
     var c = document.getElementById(domID);
     if (c) {
@@ -74,6 +83,12 @@ export default class App extends React.Component {
     }
   }
 
+  /**
+   * @name: create straight line
+   * @param {ReactDOM} domID
+   * @param {object} startPoint: start position object, example: {x: 10, y: 10}
+   * @param {object} stopPoint: stop position object, example: {x: 20, y: 30}
+   */
   createLine = (domID, startPoint, stopPoint) => {
     var c = document.getElementById(domID);
     if (c) {
@@ -105,7 +120,11 @@ export default class App extends React.Component {
     })();
   }
 
-
+  /**
+   * @name: get the DOM object axis point
+   * @param {ReactDOM} obj
+   * @return {object} {x, y}
+   */
   getXY = (obj) => {
     var x = 0,y = 0;
     if (obj.getBoundingClientRect) {
