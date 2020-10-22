@@ -223,7 +223,7 @@ export default class App extends React.Component {
 
       else if (this.state.clickNum === 7) {
         this.climbingAnimation(personObj, point7, 1)
-        this.setState({ statement: "I am not afraid of any failure now! I will try to stand on higher peak to see the better view "})
+        this.setState({ statement: "I am not afraid of any failure now! I am aheading to the higher peak! "})
       }
 
       else if (this.state.clickNum === 8) {
