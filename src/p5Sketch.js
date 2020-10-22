@@ -13,7 +13,7 @@ export default class P5Sketch extends React.Component {
   }
 
   // create a person
-  createPerson = (p5, head_radius, position) => {
+  createPerson = (p5, head_radius, position, pointArray, stepCount) => {
     let body_width = head_radius - 10
     let body_height = head_radius + 5
 
@@ -62,6 +62,8 @@ export default class P5Sketch extends React.Component {
     p5.line(leg1.startPoint.x, leg1.startPoint.y, leg1.endPoint.x, leg1.endPoint.y) 
     p5.line(leg2.startPoint.x, leg2.startPoint.y, leg2.endPoint.x, leg2.endPoint.y) 
     p5.line(leg2_1.startPoint.x, leg2_1.startPoint.y, leg2_1.endPoint.x, leg2_1.endPoint.y) 
+
+    if (pointArray.length > 0 && stepCount > 0) this.movement(p5, position, { x: pointArray[stepCount - 1].x, y: pointArray[stepCount - 1].y - 60 }, 1)
   }
 
   // create a mountain
@@ -85,61 +87,42 @@ export default class P5Sketch extends React.Component {
     }
   }
 
-  createRainingCloud = (p5) => {
-    let cloudArray = [
-      { x: 150, y: 50, r: 70 },
-      { x: 350, y: 150, r: 60 },
-      { x: 550, y: 100, r: 90 },
-      { x: 850, y: 130, r: 65 }
-    ]
-
-    let rainArr = [
-      { x: 200, y: 200 },
-      { x: 230, y: 230 },
-      { x: 230, y: 330 },
-      { x: 430, y: 800 },
-      { x: 630, y: 300 },
-      { x: 530, y: 400 },
-      { x: 720, y: 210 },
-      { x: 400, y: 200 },
-      { x: 450, y: 210 },
-      { x: 380, y: 310 },
-      { x: 580, y: 110 },
-      { x: 510, y: 180 },
-      { x: 300, y: 500 },
-      { x: 330, y: 460 },
-      { x: 450, y: 480 },
-      { x: 780, y: 280 },
-      { x: 900, y: 180 },
-      { x: 850, y: 250 },
-      { x: 880, y: 200 },
-      { x: 720, y: 350 },
-    ]
-
-    cloudArray.map(item => {
-      createOneCloud(item)
-      return null
-    })
-
-    rainArr.map(item => {
-      p5.line(item.x, item.y, getRainEndPoint(item, 40).x, getRainEndPoint(item, 40).y)
-      return null
-    })
-
-    
-
-    function createOneCloud(cloud) {
-      p5.fill('#acacac')
-      p5.stroke('#acacac')
-      p5.ellipse(cloud.x, cloud.y, cloud.r)
-      p5.ellipse(cloud.x - 40, cloud.y, cloud.r - 15)
-      p5.ellipse(cloud.x + 40, cloud.y, cloud.r - 15)
-      p5.ellipse(cloud.x - 70, cloud.y, cloud.r - 35)
-      p5.ellipse(cloud.x + 70, cloud.y, cloud.r - 35)
-    }
+  createRainLine = (p5, startPoint) => {
+    p5.line(startPoint.x, startPoint.y, getRainEndPoint(startPoint, 40).x, getRainEndPoint(startPoint, 40).y)
 
     function getRainEndPoint(point, length) {
       return {x: point.x + length ?? 100, y: point.y + length ?? 100}
+    }
+  }
+
+  createOneCloud = (p5, cloud, radius) => {
+    p5.fill('#acacac')
+    p5.stroke('#acacac')
+    p5.ellipse(cloud.x, cloud.y, radius)
+    p5.ellipse(cloud.x - 40, cloud.y, radius - 15)
+    p5.ellipse(cloud.x + 40, cloud.y, radius - 15)
+    p5.ellipse(cloud.x - 70, cloud.y, radius - 35)
+    p5.ellipse(cloud.x + 70, cloud.y, radius - 35)
+  }
+
+  createRaining = (p5, cloudArray, rainArr, speed, stepCount) => {
+    cloudArray.map(item => {
+      this.createOneCloud(p5, item.point, item.r)
+      return null
+    })
+    rainArr.map(item => {
+      this.createRainLine(p5, item)
+      return null
+    })
+    if (stepCount === 2 || stepCount === 3 || stepCount === 4) {
+      cloudArray.map(item => {
+        this.movement(p5, item.point, {x: item.point.x + 1000, y: item.point.y}, speed)
+        return null
+      })
+      rainArr.map(item => {
+        this.movement(p5, item, {x: item.x + 1000, y: item.y}, speed)
+        return null
+      })
     }
   }
 
@@ -155,6 +138,7 @@ export default class P5Sketch extends React.Component {
   render() {
     let stepCount = 0
     let stepWords = [
+      "I WILL CONQUER THIS MOUNTAIN!",
       "Let's start the journery right now!",
       "HAPPPPY! FIGHTING!",
       "Oh! I am falling! But it is only a small trouble!",
@@ -167,7 +151,7 @@ export default class P5Sketch extends React.Component {
     let button, greeting
 
     let canvasWidth = 1450
-    let canvasHeight = 700
+    let canvasHeight = 780
 
     const setup = (p5, canvasParentRef) => {
       p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef);
@@ -186,6 +170,36 @@ export default class P5Sketch extends React.Component {
     };
 
     let personPostion = { x: 50, y: canvasHeight - 60 }
+    
+    let cloudArray = [
+      { point: {x: -900, y: 50}, r: 70 },
+      { point: {x: -700, y: 150}, r: 60 },
+      { point: {x: -500, y: 100}, r: 90 },
+      { point: {x: -200, y: 130}, r: 65 }
+    ]
+
+    let rainArr = [
+      { x: -700, y: 200 },
+      { x: -670, y: 230 },
+      { x: -670, y: 330 },
+      { x: -470, y: 800 },
+      { x: -270, y: 300 },
+      { x: -370, y: 400 },
+      { x: -180, y: 210 },
+      { x: -500, y: 200 },
+      { x: -450, y: 210 },
+      { x: -520, y: 310 },
+      { x: -580, y: 110 },
+      { x: -390, y: 180 },
+      { x: -600, y: 500 },
+      { x: -570, y: 460 },
+      { x: -450, y: 480 },
+      { x: -120, y: 280 },
+      { x: -50, y: 180 },
+      { x: -50, y: 250 },
+      { x: -20, y: 200 },
+      { x: -180, y: 350 },
+    ]
 
     const draw = (p5) => {
       p5.background(230);
@@ -198,24 +212,13 @@ export default class P5Sketch extends React.Component {
       
       // create person
       p5.push()
-      this.createPerson(p5, 30, personPostion)
-      switch (stepCount) {
-        case 1: this.movement(p5, personPostion, { x: pointArray[0].x, y: pointArray[0].y - 60 }, 1); break
-        case 2: this.movement(p5, personPostion, { x: pointArray[1].x, y: pointArray[1].y - 60 }, 1); break
-        case 3: this.movement(p5, personPostion, { x: pointArray[2].x, y: pointArray[2].y - 60 }, 2); break
-        case 4: this.movement(p5, personPostion, { x: pointArray[3].x, y: pointArray[3].y - 60 }, 1); break
-        case 5: this.movement(p5, personPostion, { x: pointArray[4].x, y: pointArray[4].y - 60 }, 2); break
-        case 6: this.movement(p5, personPostion, { x: pointArray[5].x, y: pointArray[5].y - 60 }, 1); break
-        case 7: this.movement(p5, personPostion, { x: pointArray[6].x, y: pointArray[6].y - 60 }, 1); break
-        case 8: this.movement(p5, personPostion, { x: pointArray[7].x, y: pointArray[7].y - 60 }, 2); break
-        default: break
-      }
+      this.createPerson(p5, 30, personPostion, pointArray, stepCount)
+      
       p5.pop()
 
       // create raining cloud
       p5.push()
-      this.createRainingCloud(p5)
-      this.movement(p5, {x: 100, y: 0,}, {x: 1000, y: 1000})
+      this.createRaining(p5, cloudArray, rainArr, 4, stepCount)
       p5.pop()
     };
 
