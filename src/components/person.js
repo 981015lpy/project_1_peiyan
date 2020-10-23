@@ -26,24 +26,24 @@ export default function person(p5, position) {
   }
 
   // create front arm
-  createLine(arm_front, 100, 5)
+  createLine(arm_front, 140, 5)
 
   // create front leg
-  createLine(leg_front, 100, 5)
+  createLine(leg_front, 140, 5)
 
   // create body
-  p5.fill(140)
-  createLine(body, 140, 15)
+  createLine(body, 140, 10)
   
   // create head
-  p5.strokeWeight(5)
+  p5.fill(140)
+  p5.strokeWeight(2)
   p5.ellipse(headPosition.x, headPosition.y, 30) // head
 
   // create back arm
-  createLine(arm_back, 100, 5)
+  createLine(arm_back, 140, 5)
 
   // create back leg
-  createLine(leg_back, 100, 5)
+  createLine(leg_back, 140, 5)
 
 
   p5.pop()
