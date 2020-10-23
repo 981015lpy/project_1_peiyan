@@ -25,15 +25,17 @@ export default class Assignment extends React.Component {
 
     const setup = (p5, canvasParentRef) => {
       p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef)
+      p5.resizeCanvas(canvasWidth, canvasHeight)
     }
 
     let mountainMoveSpeed = 1
     let mountainPoint = Math.random()
 
-    let personPosition = { x: canvasWidth / 2, y: canvasHeight - 150}
+    let personPosition = { x: canvasWidth / 2, y: canvasHeight - 100}
     
     const draw = (p5) => {
       p5.background(210)
+      
       
       // create the sun
       sun(p5, 400, 250, 150)
@@ -48,7 +50,7 @@ export default class Assignment extends React.Component {
       ground(p5, { x: 0, y: canvasHeight - 50 }, canvasWidth, 50)
 
       // create person
-      // person(p5, personPosition)
+      person(p5, personPosition)
     }
 
     return (
