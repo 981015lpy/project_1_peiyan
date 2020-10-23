@@ -106,21 +106,21 @@ export default class P5Sketch extends React.Component {
   }
 
   createRaining = (p5, cloudArray, rainArr, speed, stepCount) => {
-    cloudArray.map(item => {
-      this.createOneCloud(p5, item.point, item.r)
-      return null
-    })
-    rainArr.map(item => {
-      this.createRainLine(p5, item)
-      return null
-    })
-    if (stepCount === 2 || stepCount === 3 || stepCount === 4) {
+    if (stepCount === 2 || stepCount === 3) {
       cloudArray.map(item => {
-        this.movement(p5, item.point, {x: item.point.x + 1000, y: item.point.y}, speed)
+        this.createOneCloud(p5, item.point, item.r)
         return null
       })
       rainArr.map(item => {
-        this.movement(p5, item, {x: item.x + 1000, y: item.y}, speed)
+        this.createRainLine(p5, item)
+        return null
+      })
+      cloudArray.map(item => {
+        this.movement(p5, item.point, {x: item.point.x + 10, y: item.point.y}, speed)
+        return null
+      })
+      rainArr.map(item => {
+        this.movement(p5, item, {x: item.x + 10, y: item.y}, speed)
         return null
       })
     }
@@ -150,11 +150,12 @@ export default class P5Sketch extends React.Component {
     ]
     let button, greeting
 
-    let canvasWidth = 1450
+    let canvasWidth = document.body.clientWidth
     let canvasHeight = 780
 
     const setup = (p5, canvasParentRef) => {
       p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef);
+      // p5.windowResized()
 
       button = p5.createButton('GO AHEAD!');
       button.position(50, 50);
@@ -218,7 +219,7 @@ export default class P5Sketch extends React.Component {
 
       // create raining cloud
       p5.push()
-      this.createRaining(p5, cloudArray, rainArr, 4, stepCount)
+      this.createRaining(p5, cloudArray, rainArr, 1, stepCount)
       p5.pop()
     };
 

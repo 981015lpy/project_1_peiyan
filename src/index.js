@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import P5Sketch from './p5Sketch'
+import Assignment from './assignment'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <P5Sketch />
+    <Assignment />
   </React.StrictMode>,
   document.getElementById('root')
 );
